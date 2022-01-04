@@ -18,12 +18,15 @@ public class AipContentCensor {
 
 
 
-    private static AipContentCensor aipContentCensor=new AipContentCensor();
+    private static AipContentCensor aipContentCensor;
 
     private AipContentCensor() {
     }
 
     public static AipContentCensor getAipContentCensor() {
+        if (aipContentCensor == null) {
+            return new AipContentCensor();
+        }
         return aipContentCensor;
     }
 
