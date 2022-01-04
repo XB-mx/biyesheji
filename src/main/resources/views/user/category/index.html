@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${categoryName}">分类页面</title>
+    <link href="/static/plugin/layui/css/layui.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+        }
+    </style>
+</head>
+<body>
+<div id="header" th:replace="/user/public/header :: #header"></div>
+<div id="content" class="layui-container">
+    <!--分类展示页-->
+    <div class="layui-panel">
+        <div class="layui-tab layui-tab-brief">
+            <ul class="layui-tab-title">
+                <li th:class="${categoryName} ne null?'':'layui-this' ">
+                    <a href="/resource/page">全部</a>
+                </li>
+                <li th:each="category:${categoryList}" th:if="${category.categoryPid} eq null"
+                    th:class="${category.categoryName} eq ${categoryName} ? 'layui-this':''">
+                    <a th:href="'/resource/category/'+${category.categoryName}" th:text="${category.categoryName}"></a>
+                </li>
+            </ul>
+        </div>
+        <!--<div style="display: flex;">
+            <div style="margin: 30px;">
+                <span>所有平台</span>
+            </div>
+            <div th:each="category:${categoryList}" style="margin: 30px;">
+                <a th:if="${category.categoryPid} eq null" th:href="${category.categoryId}" th:text="${category.categoryName}"></a>
+            </div>
+        </div>-->
+    </div>
+    <!--end-->
+    <!--资源展示页 start-->
+    <div  class="layui-panel">
+        <div th:if="${total} eq 0 " class="layui-panel" style="margin: 20px;height: 200px;text-align: center;line-height: 200px;">
+                <p class="layui-font-20">暂时没有东西</p>
+        </div>
+        <div th:each="cover:${list}" class="layui-panel" style="margin: 20px;height: 200px;overflow: hidden;">
+            <div th:attr="data-id=${cover.id}" class="layui-row ">
+                <div class="layui-col-md3">
+                    <div th:if="${cover.src}eq null">
+                        <p>没有图片！</p>
+                    </div>
+                    <div th:if="${cover.src}ne null">
+                        <img name="img"  th:src="${cover.src}" style="width: 200px;height: 200px">
+                    </div>
+                </div>
+                <div class="layui-col-md9 layui-col-xs9 layui-col-sm9" >
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend th:text="${cover.title}"></legend>
+                        <div class="layui-field-box" th:utext="${cover.content}">
+                            内容区域
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end-->
+    <div id="test1" style="display: flex;justify-content: center;align-items: center;"></div>
+</div>
+<script src="/static/plugin/layui/layui.js"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:inline="javascript">
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'test1'
+            ,count: [[${total}]]//数据总数，从服务端得到
+            ,curr:[[${page}]]
+            ,jump: function(obj, first){
+                //首次不执行
+                if(!first){
+                    window.location.href='/resource/category/'+[[${categoryName}]]+'/'+obj.curr;
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $=layui.$;
+
+    $("[data-id]").mouseover(function(filename){
+        $(this).css("cursor","Pointer");
+    });
+
+    $("[data-id]").on("click",function (){
+        var id=$(this).attr("data-id");
+        window.location.href="/resource/detail/"+id;
+    })
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

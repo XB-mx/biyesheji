@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>头像</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+
+<div id="header" th:replace="user/public/header"></div>
+<div id="content" class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md1">
+            <div th:replace="user/account/public/left::left('avatar')" id="left"></div>
+        </div>
+        <div class="layui-col-md11">
+            <div class="layui-panel account-avatar">
+                <div class="account-avatar-img">
+                    <img th:src="${user.userAvatar}" style="width: 160px;height: 160px" class="layui-circle">
+                </div>
+                <button type="button" class="layui-btn layui-btn-radius" id="upload">
+                    <i class="layui-icon">&#xe67c;</i>更换头像
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script>
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#upload' //绑定元素
+            , url: '/upload/avatar' //上传接口
+            , accept: 'images'
+            , acceptMime: 'image/*'
+            , done: function (res) {
+                //上传完毕回调
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg("更新成功");
+                    location.reload();
+                }
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+    });
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.ImageMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.Image">
+        <id property="imgId" column="img_id" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="INTEGER"/>
+        <result property="newsId" column="news_id" jdbcType="INTEGER"/>
+        <result property="imgSrc" column="img_src" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        img_id
+        ,resource_id,news_id,
+        img_src
+    </sql>
+    <select id="getImageListByIds" resultType="com.cdnu.baikun.domain.Image">
+        SELECT <include refid="Base_Column_List"/>
+        FROM
+        image
+        WHERE resource_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+         #{item}
+        </foreach>
+    </select>
+    <select id="listImgByNewsIds" resultType="com.cdnu.baikun.domain.Image">
+        SELECT <include refid="Base_Column_List"/>
+        FROM
+        image
+        WHERE news_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </select>
+</mapper>

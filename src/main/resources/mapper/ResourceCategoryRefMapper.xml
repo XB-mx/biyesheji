@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.ResourceCategoryRefMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.ResourceCategoryRef">
+        <id property="resourcesId" column="resources_id" jdbcType="INTEGER"/>
+        <id property="categoryId" column="category_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        resources_id
+        ,category_id
+    </sql>
+    <select id="getCategoryIdByResourcesId" resultType="java.lang.Integer">
+        SELECT category_id
+        FROM
+        resource_category_ref
+        <if test="resourceId!=null">
+            WHERE resources_id=${resourceId}
+        </if>
+    </select>
+    <select id="listResourcesIdByCategoryId" resultType="java.lang.Integer">
+        SELECT resources_id
+        FROM
+        resource_category_ref
+        <where>
+            <if test="categoryId!=null">
+                category_id=${categoryId}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="left">
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">用户操作</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="/admin/user">所有用户列表</a></dd>
+                        <dd><a href="javascript:;" data-src="/admin/deusers">封禁用户列表</a></dd>
+                        <dd><a href="javascript:;" data-src="/admin/users">正常用户列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">游戏资源操作</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="/admin/resourcePage">资源列表</a></dd>
+                        <dd><a href="javascript:;" data-src="/admin/resourceBanPage">封禁列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">游戏新闻操作</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="/admin/newsPage">新闻列表</a></dd>
+                        <dd><a href="javascript:;" data-src="/admin/newsBanPage">封禁列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">评论管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="/admin/comment">最近评论</a></dd>
+                        <dd><a href="javascript:;" data-src="/admin/comment/ban">封禁列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;" data-src="/admin/category">分类管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:;" data-src="/admin/tag">标签管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:;" data-src="/admin/notice">公告管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:;" data-src="/druid">SQL监控</a></li>
+                <li class="layui-nav-item"><a href="/">首页</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

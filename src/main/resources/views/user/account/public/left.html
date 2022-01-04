@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div id="left" th:fragment="left(activeUrl)">
+    <div class="layui-panel">
+        <div class="layui-menu-body-title" style="text-align: center;">
+            <span class="layui-font-gray">个人中心</span>
+        </div>
+        <ul class="layui-menu" id="docDemoMenu1">
+            <li class="" th:class="${activeUrl} eq 'home'?'layui-menu-item-checked':''">
+                <div class="layui-menu-body-title"  style="text-align: center">
+                    <a href="/account/home" data-src="">首&emsp;&emsp;页 </a>
+                </div>
+            </li>
+            <li class="layui-menu-item-divider"></li>
+            <li th:class="${activeUrl} eq 'contribute'?'layui-menu-item-checked':''">
+                <div class="layui-menu-body-title">
+                    <a href="/account/contribute">我的发布</a>
+                </div>
+            </li>
+            <li th:class="${activeUrl} eq 'collection'?'layui-menu-item-checked':''">
+                <div class="layui-menu-body-title">
+                    <a href="/account/collection" >我的收藏</a>
+                </div>
+            </li>
+            <li class="layui-menu-item-divider"></li>
+            <li th:class="${activeUrl} eq 'setting'?'layui-menu-item-checked':''">
+                <div class="layui-menu-body-title" >
+                    <a href="/account/setting">我的信息 </a>
+                </div>
+            </li>
+            <li class="layui-menu-item-divider"></li>
+            <li th:class="${activeUrl} eq 'avatar'?'layui-menu-item-checked':''">
+                <div class="layui-menu-body-title" >
+                    <a href="/account/avatar" data-src="">我的头像 </a>
+                </div>
+            </li>
+            <li class="layui-menu-item-divider"></li>
+            <!--<li th:class="${activeUrl} eq 'vip'?'layui-menu-item-checked':''">
+                <div class="layui-menu-body-title">
+                    <a href="#">会员积分 </a>
+                </div>
+            </li>-->
+        </ul>
+    </div>
+</div>
+</body>
+</html>

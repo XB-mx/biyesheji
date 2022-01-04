@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/plugin/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<table id="demo" lay-filter="test" style="height: 100%"></table>
+<script src="/static/plugin/layui/layui.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">封禁</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script th:inline="none">
+    var $=layui.$;
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            ,url: '/admin/userslist' //数据接口
+            ,page:true
+            ,toolbar:true
+            ,cellMinWidth: 80
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'userId', title: 'ID', sort: true}
+                ,{field: 'userName', title: '用户名'}
+                ,{field: 'userNickname', title: '用户昵称'}
+                ,{field: 'userSex', title: '性别',templet: '#sex'}
+                ,{field: 'userEmail', title: '用户邮箱'}
+                ,{field: 'userRole', title: '用户权限'}
+                ,{field: 'userStatus', title: '用户状态',templet: '#status'}
+                ,{fixed: 'right',  align:'center', toolbar: '#barDemo'}
+            ]]
+        });
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'delete':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.msg('删除');
+                    }
+                    break;
+            };
+        });
+
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+            if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url:'/admin/delete/'+data.userId
+                        ,type: 'get'
+                        ,success:function (res){
+                            if (res.status===1){
+                                layer.msg("删除成功！");
+                            }
+                        }
+                        ,error:function (res){
+                            layer.msg("失败！");
+                        }
+                    })
+                });
+            }else if(layEvent === 'edit'){
+                layer.confirm('请确认用户id：'+data.userId, function(index){
+                    $.ajax({
+                        url: '/admin/disa/'+data.userId
+                        ,type: 'put'
+                        ,success:function (res){
+                            if (res.status===1){
+                                layer.msg("封禁成功!");
+                                obj.del();
+                            }
+                        }
+                        ,error:function (res){
+                            layer.msg("失败！");
+                        }
+                    });
+                });
+            }
+        });
+    });
+
+</script>
+<script type="text/html" id="sex">
+    {{# if (d.userSex == '0') { }}
+    女
+    {{# } else if(d.userSex == '1') { }}
+    男
+    {{# } else { }}
+    未知
+    {{# } }}
+</script>
+<script type="text/html" id="status">
+    {{# if (d.userStatus == '0') { }}
+    封禁中
+    {{# } else if(d.userStatus == '1') { }}
+    正常
+    {{# } else { }}
+    未知
+    {{# } }}
+</script>
+</body>
+</html>

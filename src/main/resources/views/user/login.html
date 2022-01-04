@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            background: url("/static/images/loginBack.jpg");
+        }
+    </style>
+</head>
+<body onload="cook()">
+<div class="login-content">
+    <form class="layui-form layui-card-body" method="post" action="/loginSumbit"
+          style="background:rgba(255,255,255,0.5);">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" required lay-verify="required" placeholder="请输入用户名" autocomplete="on"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密&emsp;码</label>
+            <div class="layui-input-block">
+                <input type="password" name="userPassword" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-label">保存密码</div>
+            <div class="layui-input-block">
+                <input type="checkbox" name="save" lay-skin="switch" lay-text="保存|关闭">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <a href="/" class="layui-form-label">⋘返回首页</a>
+            <a href="/resiger" class="layui-form-label">注册⋙</a>
+        </div>
+
+    </form>
+
+</div>
+<script type="text/javascript" src="/static/plugin/layui/layui.js" charset="UTF-8"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const $axios = axios.create({
+        timeout: 3000
+    });
+    $axios.defaults.withCredentials = true;
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            axios({
+                method: 'post',
+                url: '/loginSumbit',
+                data: {
+                    userName: data.field.userName,
+                    userPassword: data.field.userPassword,
+                    save: data.field.save
+                }
+            }).then(function (res) {
+                if (res.data.status == 1) {
+                    window.location = "/"
+                } else {
+                    console.log(res.data.msg);
+                    layer.msg(res.data.msg);
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+    function cook() {
+        var cks = document.cookie;
+        cks = cks.split(';');
+        console.log(cks);
+    }
+
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

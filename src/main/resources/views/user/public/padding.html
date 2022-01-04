@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="padding">
+            <div class="layui-laypage layui-laypage-default">
+                <span th:text="${total%10} eq 0 ? '总页数：'+${total/10}:'总页数：'+${total/10+1}" class="layui-laypage-count"></span>
+                <!--上一页-->
+                <div th:if="${page} eq 1">
+                   <!--当前页为第一页，隐藏上一页按钮-->
+                </div>
+                <div th:if="${page} ne 1">
+                    <a class="layui-laypage-prev" th:href="@{'/resource/page/'+${page-1}}">
+                        <span class="">上一页</span>
+                    </a>
+                </div>
+                <!--下一页-->
+                <div th:if="${total%10} eq 0 ? ${page} eq ${total/10}:${page} eq ${total/10+1}">
+                    <!--到了尾页隐藏，下一页按钮-->
+                </div>
+                <div th:if="${total%10} eq 0 ? ${page} ne ${total/10}:${page} ne ${total/10+1}">
+                    <a class="layui-laypage-next" th:href="@{'/resource/page/'+${page+1}}">
+                        <span class="">下一页</span>
+                    </a>
+                </div>
+
+            </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">资讯标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="newsTitle" id="newsTitle" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">资讯内容</label>
+        <div class="layui-input-block">
+            <textarea name="newsContent" id="newsContent" placeholder="请输入内容" lay-verify="content" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="News">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/plugin/layui/layui.js" charset="UTF-8"></script>
+<script>
+    layui.use(['layedit','form'], function(){
+        var layedit = layui.layedit;
+        var form = layui.form;
+        var $=layui.$;
+        layedit.set({
+            uploadImage: {
+                url: 'upload/image' //接口url
+                ,type: 'post' //默认post
+            }
+        });
+        var index=layedit.build('newsContent'); //建立编辑器
+        let url=window.location.href;
+        let urls= url.split('/');
+        let id=urls[5];
+        $.get('/api/'+urls[3]+'/get/'+id,function (res){
+            if (res.status==0){
+                $('#newsTitle').val(res.data.newsTitle);
+                layedit.setContent(index,res.data.newsContent);
+            }
+        })
+
+        form.verify({
+            content: function (value) {
+                layedit.sync(index);
+            }
+        });
+
+        form.on('submit(News)', function(data){
+            $.ajax({
+                url: '/api/'+urls[3]+"/update/"+id
+                ,type: 'put'
+                ,data: {
+                    newsTitle:data.field.newsTitle
+                    ,newsContent:data.field.newsContent
+                }
+                ,success:function (res){
+                    var data = eval('(' + res.data + ')');
+                    if (res.status==0){
+                        layer.msg('更新成功',{
+                            time: 2000
+                        }, function(){
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index);
+                        });
+                    }else if (res.status==1){
+                        msg='';
+                        for (let i=0;i<data.length;i++){
+                            msg+=data[i].msg;
+                        }
+                        layer.open({
+                            type: 1,
+                            area: ['500px', '300px'],
+                            content:msg
+                        });
+                    }
+                }
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+<script>
+    layui.use(['upload', 'element', 'layer'], function() {
+        //执行实例
+        var $ = layui.jquery
+            , upload = layui.upload
+            , element = layui.element
+            , layer = layui.layer;
+        var uploadInst = upload.render({
+            elem: '#newsCoverBtn'
+            , url: '/upload/cover' //改成您自己的上传接口
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#newsCoverImg').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo0', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                $('#newsCoverImg').attr('src', res.data.src);
+                //……
+                $('#demoText1').html(''); //置空上传失败的状态
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #ff5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+            //进度条
+            , progress: function (n, elem, e) {
+                element.progress('demo0', n + '%'); //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

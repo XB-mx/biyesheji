@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.CommentMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.Comment">
+            <id property="commentId" column="comment_id" jdbcType="INTEGER"/>
+            <result property="commentStatus" column="comment_status" jdbcType="INTEGER"/>
+            <result property="commentContent" column="comment_content" jdbcType="VARCHAR"/>
+            <result property="commentTime" column="comment_time" jdbcType="TIMESTAMP"/>
+            <result property="commentRole" column="comment_role" jdbcType="VARCHAR"/>
+            <result property="commentUserNickname" column="comment_user_nickname" jdbcType="VARCHAR"/>
+            <result property="commentUserAvatar" column="comment_user_avatar" jdbcType="VARCHAR"/>
+            <result property="commentUserId" column="comment_user_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        comment_id,comment_status,comment_content,
+        comment_time,comment_role,comment_user_nickname,
+        comment_user_avatar,comment_user_id
+    </sql>
+</mapper>

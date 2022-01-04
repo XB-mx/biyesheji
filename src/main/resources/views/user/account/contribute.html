@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发布信息页</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+
+<div id="header" th:replace="user/public/header"></div>
+<div id="content" class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md1">
+            <div th:replace="user/account/public/left::left('contribute')" id="left"></div>
+        </div>
+        <div class="layui-col-md11">
+            <div class="layui-panel">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">游戏资源</li>
+                        <li>游戏资讯</li>
+                    </ul>
+                    <div class="layui-tab-content" style="">
+                        <div class="layui-tab-item layui-show">
+                            <table id="demo" lay-filter="test"></table>
+                        </div>
+                        <div class="layui-tab-item">
+                            <table id="demo2" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use('table', function(){
+        let table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            ,url: '/admin/resourceData' //数据接口
+            ,page: true //开启分页
+            ,cols: [
+                [ //表头
+                {field: 'resourcesTitle', title: '资源标题'}
+                ,{field: 'resourcesCreateTime', title: '资源创建时间',  sort: true}
+                ,{field: 'resourcesViewsCount', title: '资源浏览量',sort: true, }
+                ,{field: 'resourcesLikeCount', title: '资源点赞数',sort: true}
+                ,{field: 'resourcesUserGroup', title: '资源访问用户组',}
+                ,{fixed: 'right',  align:'center', toolbar: '#barDemo'}
+            ]
+            ]
+            ,id: 'Table1'
+        });
+        //第二个实例
+        table.render({
+            elem: '#demo2'
+            ,url: '/admin/newsData' //数据接口
+            ,page: true //开启分页
+            ,cols: [
+                [ //表头
+                    {field: 'newsTitle', title: '新闻标题'}
+                    ,{field: 'newsCreateTime', title: '新闻创建时间',  sort: true}
+                    ,{field: 'newsViewCount', title: '新闻浏览量',sort: true}
+                    ,{field: 'newsLikeCount', title: '新闻点赞数',sort: true}
+                    ,{fixed: 'right',  align:'center', toolbar: '#barDemo'}
+                ]
+            ]
+            ,id: 'Table2'
+        });
+    });
+</script>
+<script>
+    layui.use('table', function() {
+        var $=layui.$;
+        var table=layui.table;
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+            if(layEvent === 'detail'){ //查看
+                if (data.resourcesId!=null) location.href='/resource/detail/'+data.resourcesId;
+                if (data.newsId!=null)  location.href='/news/detail/'+data.newsId;
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url:'/admin/del/resource/'+data.resourcesId
+                        ,type: 'DELETE'
+                        ,success:function (res){
+                            if (res.status==0){
+                                layer.msg("删除成功",{
+                                    time:2000
+                                })
+                            }
+                            obj.del();
+                        }
+                        ,error:function (res){
+                            layer.msg("删除失败",{
+                                time:2000
+                            })
+                        }
+                    })
+                });
+            }
+        });
+    });
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

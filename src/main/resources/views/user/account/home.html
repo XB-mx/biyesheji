@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+<div id="header" th:replace="user/public/header"></div>
+<div id="content" class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md1">
+            <div th:replace="user/account/public/left::left('home')" id="left"></div>
+        </div>
+        <div class="layui-col-md11">
+            <div class="layui-panel">
+                <div class="layui-row account-info">
+                    <div class="layui-col-md2">
+                        <img th:src="${user.userAvatar}" class="layui-circle" style="width: 100px;height: 100px;">
+                    </div>
+                    <div class="layui-col-md10">
+                        <div class="account-info-right">
+                            <div class="account-info-right-msg">
+                                <div>
+                                    <span th:text="${user.userNickname}" class="layui-font-20"></span>
+                                </div>
+                                <div class="account-info-right-msg-role">
+                                    <span th:text="${user.userRole} eq 'admin'?'管理员':(${user.userRole} eq 'vip'?'付费会员':'普通用户')"
+                                          class="layui-font-gray" style="margin-left: 40px;"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <span>用户积分：<span th:text="${user.userMoney}" class="layui-font-red">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

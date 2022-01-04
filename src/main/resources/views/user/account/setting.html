@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的信息</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+<div id="header" th:replace="user/public/header"></div>
+<div id="content" class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md1">
+            <div th:replace="user/account/public/left::left('setting')" id="left"></div>
+        </div>
+        <div class="layui-col-md11">
+            <div class="layui-panel">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">昵称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="userNickname" required lay-verify="required" placeholder="请输入昵称"
+                                   autocomplete="off" class="layui-input"
+                                   th:value="${user.userNickname}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="title" lay-verify="required" placeholder="请输入昵称" autocomplete="off"
+                                   class="layui-form-mid layui-word-aux"
+                                   th:value="${user.userName}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户邮箱</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="title" lay-verify="required" placeholder="请输入昵称" autocomplete="off"
+                                   class="layui-form-mid layui-word-aux"
+                                   th:value="${user.userEmail}" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="userSex" value="1" title="男" th:checked="${user.userSex}==1">
+                            <input type="radio" name="userSex" value="0" title="女" th:checked="${user.userSex}==0">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">感兴趣</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" lay-filter="filter" th:each="tag:${list}" th:title="${tag.tagName}" name="tagId" th:value="${tag.tagId}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit
+                                    lay-filter="formDemo">立即提交
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script>
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        form.on('submit(formDemo)', function (data) {
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            if ($("input:checkbox[name='tagId']:checked").length != 0) {
+                var arr = new Array();
+                $("input:checkbox[name='tagId']:checked").each(function(i){
+                    arr[i] = $(this).val();
+                });
+                //  替换 data.field.level的数据为拼接后的字符串
+                data.field.tagId = arr.join(",");//将数组合并成字符串
+                $.ajax({
+                    type: 'put',
+                    url: "/account/settingsumbit",
+                    data: {
+                        userNickname: data.field.userNickname,
+                        userSex: data.field.userSex,
+                        tagId: data.field.tagId
+                    },
+                    success:function (res) {
+                        layer.msg(res.msg)
+                    }
+                })
+            }
+            $.ajax({
+                type: 'put',
+                url: "/account/settingsumbit",
+                data: {
+                    userNickname: data.field.userNickname,
+                    userSex: data.field.userSex,
+                },
+                success:function (res) {
+                    layer.msg(res.msg)
+                }
+            })
+
+            return false;
+        });
+    });
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

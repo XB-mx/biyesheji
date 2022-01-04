@@ -1,0 +1,35 @@
+.login-content {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-info {
+    display: flex;
+    margin-left: 20px;
+    height: 200px;
+    margin-top: 40px;
+}
+
+.account-info-right {
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+}
+
+.account-info-right-msg {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.account-info-right-msg-role {
+    display: flex;
+    align-items: center;
+}
+
+.account-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

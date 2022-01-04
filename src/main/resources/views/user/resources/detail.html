@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${cover.title}"></title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css" media="all">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+        img{
+            clear: both;
+            display: block;
+            margin: auto;
+            max-width: 80%;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+<div id="header" th:replace="/user/public/header :: #header"></div>
+<div name="content" class="layui-container">
+    <div class="layui-row" style="margin-top: 10%;">
+        <div class="layui-col-md8">
+            <div class="layui-card" style="min-height: 400px;">
+                <div style="min-height: 100px;display: flex;flex-direction: column;justify-content: space-between">
+                    <div style="">
+                        <h1 th:utext="${resource.resourcesTitle}"></h1>
+                    </div>
+                    <div style="display: flex;flex-direction: row-reverse;align-items: center;">
+                        <div>
+                            <span class="layui-word-aux" th:text="${#dates.format(resource.resourcesCreateTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        </div>
+                        <div>
+                            <p th:text="'发布者：'+${author.userNickname}"></p>
+                        </div>
+                    </div>
+                    <div th:if="${session.user} ne null and ${session.user.userId} eq ${author.userId}" style="align-self: flex-end;">
+                        <button id="update" class="layui-btn layui-btn-radius layui-btn-normal" >修改</button>
+                    </div>
+                </div>
+                <hr class="layui-border-cyan">
+                <div class="layui-panel" style="min-height: 300px;">
+                    <div class="layui-text" th:utext="${resource.resourcesContent}"></div>
+                </div>
+                <hr class="layui-border-cyan">
+                <!--对文章的操作-->
+                <div class="layui-panel" style="display: flex;justify-content: space-around;align-items: center;">
+                    <i id="like" class="layui-icon layui-icon-praise" style="font-size: 60px;"></i>
+                    <i id="collection" class="layui-icon layui-icon-rate" style="font-size: 60px;"></i>
+                </div>
+                <hr class="layui-border-cyan">
+                <div th:replace="user/public/comment::comment"/>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-panel">
+                <div style="display: inline">
+                    <p>游戏封面：</p>
+                    <img th:src="${cover.src}" style="height: 200px;">
+                </div>
+                <div th:each="category : ${categorys}">
+                    <div style="display: flex;align-items: center;">
+                        所属平台：<h1 th:if="${category.categoryPid} eq null" th:text="${category.categoryName}"></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js" charset="utf-8"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script src="/static/plugin/jquery-3.6.0.js"></script>
+<script src="/static/plugin/jquery.cookie.js" type="text/javascript" charset="UTF-8"></script>
+<script src="/static/js/comment.js" charset="utf-8"></script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

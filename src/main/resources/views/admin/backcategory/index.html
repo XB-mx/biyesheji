@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>分类管理</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-row">
+    <div class="layui-col-md4">
+        <div class="layui-panel">
+            <div class="layui-form" >
+                <div class="layui-form-item">
+                    <div class="layui-form-label" style="font-weight: bolder">添加分类</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="categoryName" required  lay-verify="required" placeholder="请输入分类名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">父节点</label>
+                    <div class="layui-input-block">
+                        <select name="categoryPid">
+                            <option value="">无</option>
+                            <option th:each="c:${categories}" th:value="${c.categoryId}"
+                                    th:text="${c.categoryPid!=null}?'':${c.categoryName}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="categoryDescription"  placeholder="请输入分类描述" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-col-md8">
+            <table class="layui-table" lay-filter="demo">
+                <thead>
+                    <tr>
+                        <th lay-data="{field:'categoryName'}">名称</th>
+                        <th lay-data="{field:'categoryId',sort:true}">ID</th>
+                        <th lay-data="{field:'categoryPid'}">PID</th>
+                        <th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="c:${categories}">
+                        <td th:text="${c.categoryName}"></td>
+                        <td th:text="${c.categoryId}"></td>
+                        <td th:text="${c.categoryPid}"></td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<script src="/static/plugin/layui/layui.js"></script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use('form', function(){
+        var $=layui.$;
+        var form = layui.form;
+
+        form.on('submit(formDemo)', function(data){
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            $.ajax({
+                url: '/admin/addCategory'
+                ,type: 'post'
+                ,data: data.field
+                ,success:function (res){
+                    layer.msg(res.msg);
+                }
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+<script>
+    layui.use('table', function(){
+        var $=layui.$;
+        var table = layui.table;
+
+        table.init('demo', {
+
+        });
+        table.on('tool(demo)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+            if(layEvent === 'detail'){ //查看
+                console.log(data)
+                window.open('/resource/category/'+data.categoryName)
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    $.ajax({
+                        url:'/admin/del/category/'+data.categoryId
+                        ,type:'DELETE'
+                        ,success:function (res){
+                            layer.msg(res.msg,{time:2000});
+                        }
+                    })
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

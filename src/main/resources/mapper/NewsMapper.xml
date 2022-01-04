@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.NewsMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.News">
+        <id property="newsId" column="news_id" jdbcType="INTEGER"/>
+        <result property="newsTitle" column="news_title" jdbcType="VARCHAR"/>
+        <result property="newsContent" column="news_content" jdbcType="VARCHAR"/>
+        <result property="newsCreateTime" column="news_create_time" jdbcType="TIMESTAMP"/>
+        <result property="newsLastUpdataTime" column="news_last_updata_time" jdbcType="TIMESTAMP"/>
+        <result property="newsUserId" column="news_user_id" jdbcType="INTEGER"/>
+        <result property="newsViewCount" column="news_view_count" jdbcType="INTEGER"/>
+        <result property="newsLikeCount" column="news_like_count" jdbcType="INTEGER"/>
+        <result property="newsAllowComment" column="news_allow_comment" jdbcType="INTEGER"/>
+        <result property="newsStatus" column="news_status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        news_id
+        ,news_title,news_content,
+        news_create_time,news_last_updata_time,news_user_id,
+        news_view_count,news_like_count,news_allow_comment,
+        news_status
+    </sql>
+    <select id="getNewsLikeCount" resultType="java.lang.Integer">
+        SELECT news_like_count
+        FROM  news
+        WHERE news_id=${id}
+    </select>
+    <select id="getNewsViewCount" resultType="java.lang.Integer">
+        SELECT news_view_count
+        FROM  news
+        WHERE news_id=${id}
+    </select>
+</mapper>

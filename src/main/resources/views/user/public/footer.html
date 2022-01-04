@@ -1,0 +1,60 @@
+<div id="footer" class="layui-fluid">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md4 layui-bg-black">
+            <div class="layui-panel">
+                <div style="padding: 30px;" id="notice"></div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-bg-black">
+            <div class="layui-panel">
+                <div style="padding: 30px;">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>友情链接</legend>
+                        <div class="layui-field-box">
+                            <div style="display: flex;flex-direction: column;align-items: flex-start;">
+                                <a href="https://www.ali213.net/" target="_blank" style="margin: 10px">游侠</a>
+                                <a href="https://www.3dmgame.com/" target="_blank" style="margin: 10px">3DM</a>
+                                <a href="https://www.91wii.com/" target="_blank" style="margin: 10px">91WILL</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-bg-green">
+            <div class="layui-panel">
+                <div style="padding: 30px;">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>联系方式</legend>
+                        <div class="layui-field-box">
+                            <div style="display: flex;flex-direction: column;align-items: flex-start;">
+                                <p>QQ：1912929095</p>
+                                <p>电话：18113519165</p>
+                                <p>E-MAIL：1912929095@qq.com</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $=layui.$
+    $(function (){
+        $.get("/api/admin/notice",function (res){
+            /*res.data.noticeTitle+'<hr>'+res.data.noticeContent*/
+            var notice=
+                '<fieldset class="layui-elem-field layui-field-title">' +
+                '<legend>'+res.data.noticeTitle+'</legend>'+
+                '<div class="layui-field-box"> ' +
+                res.data.noticeUpdataTime+
+                '<hr>'+
+                res.data.noticeContent+
+                '</div>'+
+                '</<fieldset>';
+            $("#notice").append(notice);
+        })
+    })
+
+</script>

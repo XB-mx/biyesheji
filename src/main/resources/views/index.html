@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/static/js/script.js"></script>
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+<div id="header" th:replace="/user/public/header :: #header"></div>
+<div id="content" class="layui-container">
+    <div class="" style="display: flex;align-items: center;">
+        <h1>全部分类:</h1>
+        <div th:each="category:${categories}" >
+            <a th:href="'/resource/category/'+${category.categoryName}">
+                <h2 th:text="${category.categoryName}" style="margin: 20px;"></h2>
+            </a>
+        </div>
+    </div>
+    <!--推荐-->
+    <div class="" style="height: 550px;margin-top: 20px; display: flex">
+        <div style="width: 810px;">
+            <div style="display: flex;justify-content: space-between;margin: 20px;">
+                <h1>推荐内容</h1>
+            </div>
+            <hr>
+            <ul id="like" style="display: flex;flex-wrap: wrap;max-width: 1000px;">
+
+            </ul>
+        </div>
+    </div>
+    <!--新闻-->
+    <div class="" style="height: 550px;margin-top: 20px; display: flex">
+        <div style="width: 810px;">
+            <div style="display: flex;justify-content: space-between;margin: 20px;">
+                <h1>新闻</h1>
+                <a href="/news/page">查看全部</a>
+            </div>
+            <hr>
+            <ul id="news" style="display: flex;flex-wrap: wrap;max-width: 1000px;">
+
+            </ul>
+        </div>
+    </div>
+    <!--资源-->
+    <div th:each="category:${categories}" th:if="${category.categoryPid} eq null" class="" style="height: 550px;margin-top: 20px; display: flex">
+        <!--左部-->
+        <div style="width: 810px;">
+            <div style="display: flex;justify-content: space-between;margin: 20px;" >
+                <h1 th:text="${category.categoryName}" class="category" ></h1>
+                <a th:href="'/resource/category/'+${category.categoryName}" target="_blank" style="margin-right: 10px;">查看全部</a>
+            </div>
+            <hr>
+            <ul class="resource-content" style="display: flex;flex-wrap: wrap;max-width: 1000px;">
+
+            </ul>
+        </div>
+        <!--右部-->
+        <div>
+
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js" charset="utf-8"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<!--加载分类下的数据-->
+<script>
+    $=layui.$
+    $.get("/api/category/list",function (res){
+        if (res.status==0){
+            var categorys=res.data
+            for (let i=0;i<categorys.length;i++){
+                $.get("/api/resource/category/"+categorys[i].categoryName,function (result){
+                    var data=result.data;
+                    if (data!=null){
+                        for (let li=0;li<data.length;li++){
+                            var content=
+                                '<li class="layui-panel" style="overflow: hidden;"><a href="/resource/detail/'+data[li].id+'">' +
+                                '<div><img src="'+data[li].src+'" style="height: 200px;width: 200px;"></div>' +
+                                '<div style="overflow: hidden;max-width: 200px;max-height: 50px;"><p class="layui-font-20">'+data[li].title+'</p></div>' +
+                                '</a></li>'
+
+                            $(".resource-content").eq(i).append(content);
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>
+<!--加载新闻-->
+<script>
+    $=layui.$
+    $.get('/api/news/list',function (res){
+        var data=res.data;
+        if (data!=null){
+            for (let li=0;li<data.length;li++){
+                var content=
+                    '<li class="layui-panel" style="max-width:200px;"><a href="/news/detail/'+data[li].id+'">' +
+                    '<div><img src="'+data[li].src+'" style="height: 200px;width: 200px;"></div>' +
+                    '<div><p class="layui-font-20">'+data[li].title+'</p></div>' +
+                    '</a></li>'
+
+                $("#news").append(content);
+            }
+        }
+    })
+</script>
+<!--推荐-->
+<script>
+    $=layui.$
+    $.get('/api/news/like',function (res){
+        var data=res.data;
+        if (data!=null){
+            for (let li=0;li<data.length;li++){
+                var content=
+                    '<li class="layui-panel" style="max-width:200px;"><a href="/news/detail/'+data[li].id+'">' +
+                    '<div><img src="'+data[li].src+'" style="height: 200px;width: 200px;"></div>' +
+                    '<div><p class="layui-font-20">'+data[li].title+'</p></div>' +
+                    '</a></li>'
+
+                $("#like").append(content);
+            }
+        }
+    })
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404</title>
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body>
+<div id="header" th:replace="/user/public/header :: #header"></div>
+<div>
+    404！
+</div>
+<script src="/static/plugin/layui/layui.js" charset="utf-8"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.TagNewsResourceRefMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.TagNewsResourceRef">
+        <id property="tagId" column="tag_id" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="INTEGER"/>
+        <result property="newsId" column="news_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        tag_id
+        ,resource_id,news_id
+    </sql>
+    <select id="getNewIdsByTagId" resultType="java.lang.Integer">
+        SELECT news_id
+        FROM tag_news_resource_ref
+        WHERE tag_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getResourceIdsByTagId" resultType="java.lang.Integer">
+        SELECT resource_id
+        FROM tag_news_resource_ref
+        WHERE tag_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

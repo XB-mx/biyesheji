@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.CommentResourceNewsRefMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.CommentResourceNewsRef">
+        <id property="commentId" column="comment_id" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="INTEGER"/>
+        <result property="newsId" column="news_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        comment_id
+        ,resource_id,news_id
+    </sql>
+    <select id="listCommentIdsByResourceId" resultType="java.lang.Integer">
+        SELECT comment_id
+        FROM comment_resource_news_ref
+        WHERE resource_id=${resourceId}
+    </select>
+    <select id="listCommentIdsByNewsId" resultType="java.lang.Integer">
+        SELECT comment_id
+        FROM comment_resource_news_ref
+        WHERE news_id=${newsId}
+    </select>
+</mapper>

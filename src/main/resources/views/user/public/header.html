@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="header" class="layui-header">
+    <div class="layui-row layui-bg-green" >
+        <div class="layui-col-md4">
+            <ul class="layui-nav layui-bg-green" lay-bar="disabled" >
+                <li class="layui-nav-item"><a href="/">首页</a></li>
+                <li class="layui-nav-item">
+                    <a href="/account/collection">收藏</a>
+                </li>
+                <!--/*@thymesVar id="user" type="com.cdnu.baikun.domain.User"*/-->
+                <li class="layui-nav-item" th:if="${session.user} ne null">
+                    <a href="/account/contribute">我的发布</span></a>
+                </li>
+                <li class="layui-nav-item" th:if="${session.user} ne null">
+                    <a href="javascript:;"><img th:src="${session.user.UserAvatar}" class="layui-nav-img"></a>
+                    <dl class="layui-nav-child">
+                        <dd><a th:text="${session.user.UserNickname}" style="text-align: center;"></a></dd>
+                        <hr>
+                        <dd><a href="/account/">个人中心</a></dd>
+                        <hr>
+                        <dd th:if="${session.user.userRole} eq 'admin'"><a  href="/admin" style="text-align: center;">后台</a></dd>
+                        <hr th:if="${session.user.userRole} eq 'admin'">
+                        <dd style="text-align: center;"><a href="/logout">退出</a></dd>
+                    </dl>
+                </li>
+                <li th:unless="${session.user} ne null" class="layui-nav-item">
+                    <a href="/login">登录</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/resiger">注册</a></dd>
+                    </dl>
+                </li>
+
+            </ul>
+        </div>
+        <div class="layui-col-md4">
+            <ul class="layui-nav layui-bg-green" lay-bar="disabled">
+                <li class="layui-nav-item" style="display: flex;justify-content: center;">
+                    <form class="layui-form" action="/search" style="width: 100%;">
+                        <div class="layui-input-inline" style="width: 100%;">
+                            <input type="text" name="keywords" lay-verify="search" autocomplete="on" placeholder="请输入搜索内容"
+                                   class="layui-input ">
+                        </div>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-col-md4">
+            <ul class="layui-nav layui-bg-green" lay-bar="disabled" style="display: flex;flex-direction: row-reverse; align-items: center;flex-wrap: wrap;">
+                <li class="layui-nav-item" >
+                    <a href="/resource/page" >全部游戏资源</a>
+                </li>
+                <li class="layui-nav-item" >
+                    <a href="/news/page" >全部游戏新闻</a>
+                </li>
+                <li class="layui-nav-item" th:if="${session.user} ne null">
+                    <a href="/contribute" class="layui-btn layui-btn-radius layui-btn-warm layui-font-black">投稿</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

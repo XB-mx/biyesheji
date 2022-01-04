@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdnu.baikun.mapper.ResourcesMapper">
+
+    <resultMap id="BaseResultMap" type="com.cdnu.baikun.domain.Resources">
+        <id property="resourcesId" column="resources_id" jdbcType="INTEGER"/>
+        <result property="resourcesTitle" column="resources_title" jdbcType="VARCHAR"/>
+        <result property="resourcesContent" column="resources_content" jdbcType="VARCHAR"/>
+        <result property="resourcesCreateTime" column="resources_create_time" jdbcType="TIMESTAMP"/>
+        <result property="resourcesLastUpdataTime" column="resources_last_updata_time" jdbcType="TIMESTAMP"/>
+        <result property="resourcesUserId" column="resources_user_id" jdbcType="INTEGER"/>
+        <result property="resourcesViewsCount" column="resources_views_count" jdbcType="INTEGER"/>
+        <result property="resourcesLikeCount" column="resources_like_count" jdbcType="INTEGER"/>
+        <result property="resourcesStatus" column="resources_status" jdbcType="INTEGER"/>
+        <result property="resourcesUserGroup" column="resources_user_group" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        resources_id
+        ,resources_title,resources_content,
+        resources_create_time,resources_last_updata_time,resources_user_id,
+        resources_views_count,resources_like_count,resources_status,
+        resources_user_group
+    </sql>
+    <select id="getResourceLike" resultType="java.lang.Integer">
+        SELECT
+            resources_like_count
+        FROM
+            resources
+        WHERE
+            resources_id=${resourceId}
+    </select>
+    <select id="getResourceView" resultType="java.lang.Integer">
+        SELECT
+            resources_views_count
+        FROM
+            resources
+        WHERE
+            resources_id=${resourceId}
+    </select>
+    <select id="listAllByResourcesIds" resultType="com.cdnu.baikun.domain.Resources">
+        SELECT *
+        FROM resources
+        WHERE resources_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

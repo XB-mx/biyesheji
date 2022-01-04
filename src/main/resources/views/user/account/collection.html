@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的收藏</title>
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body{
+            background: url("/static/images/back.jpg");
+            background-size: auto;
+        }
+    </style>
+</head>
+<body class="layui-bg-gray">
+
+<div id="header" th:replace="user/public/header"></div>
+<div id="content" class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md1">
+            <div th:replace="user/account/public/left::left('collection')" id="left"></div>
+        </div>
+        <div class="layui-col-md11">
+            <div class="layui-panel">
+                <ul id="demo" class="layui-panel">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/plugin/layui/layui.js"></script>
+<div id="footer" th:replace="user/public/footer"></div>
+<script>
+    layui.use('flow', function(){
+        var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        let url=window.location.href;
+        flow.load({
+            elem: '#demo' //指定列表容器
+            ,isLazying: true
+            ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('/api/collection/list?page='+page, function(res){
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function(index, item){
+                        let img;
+                        if (item.src==null){
+                            img='<i class="layui-icon layui-icon-picture" style="width: 200px;height: 100px"></i>'
+                        }else {
+                            img='<img name="img"  src="'+item.src+'" style="width: 200px;height: 100px">'
+                        }
+                        panel=
+                            '<li data-id="'+item.id+'" class="layui-row layui-panel" style="height: 100px;margin: 20px;overflow:hidden;">' +
+                            '<a href="/'+item.category+'/detail/'+item.id+'">'+
+                            '       <div class="layui-col-md3">' +
+                            img+
+                            '        </div>' +
+                            '        <div class="layui-col-md9 layui-col-xs9 layui-col-sm9">' +
+                            '             <fieldset class="layui-elem-field layui-field-title">' +
+                            '                <legend>'+item.title+'</legend>' +
+                            '                <div class="layui-field-box">' +
+                            '<div class="layui-text">'+
+                            item.content+
+                            '</div>'+
+                            '                </div>' +
+                            '             </fieldset>' +
+                            '        </div>' +
+                            '</a>'+
+                            '</li>';
+                        lis.push(panel);
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.count);
+                });
+            }
+        });
+    });
+</script>
+<script src="/static/plugin/canvas-nest.js"></script>
+</body>
+</html>
