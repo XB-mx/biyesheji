@@ -60,4 +60,4 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句
 user:
-  filepath: E://clzyproject/biyesheji/upload/ #是两个//
+  filepath: E://clzyproject/bbbbkkkk/upload/ #是两个//
