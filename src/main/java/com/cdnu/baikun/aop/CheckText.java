@@ -36,7 +36,7 @@ public class CheckText {
     public void checkupdate() {
     }
 
-    /*@Around("checkcontribute()||checkupdate()")
+    @Around("checkcontribute()||checkupdate()")
     public ResultVO checkText(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs();
         for (Object obj : args) {
@@ -58,7 +58,7 @@ public class CheckText {
         }
         Object o = proceedingJoinPoint.proceed();
         return (ResultVO) o;
-    }*/
+    }
 
     /**
      * 对评论的文本审核
